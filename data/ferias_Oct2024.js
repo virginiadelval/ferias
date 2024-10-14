@@ -1,14 +1,34 @@
 
+var MarkerOptions = {
+  radius: 6,
+  fillColor: "#000",
+  color: "#000",
+  weight: 0.7,
+  opacity: 1,
+  fillOpacity: 0.8
+};
+
 
 function styleFerias(feature) {
-    return {  // Aquí necesitas retornar el objeto con las opciones
-        icon: 'circle',
-        iconShape: 'marker',
-        borderColor: '#015CB4',
-        textColor: '#015CB4',
-        backgroundColor: '#FEFEFFFF',
-        innerIconStyle: 'font-size:9px;padding-top:1px;'
-    };
+ 
+  var color = '#015CB4' ;
+  return {
+      radius: 6,
+      weight: 2,
+      opacity: 0.9,
+      fillColor: color,
+      color: "#EDF1F6FF",
+      dashArray: '0',
+      fillOpacity: 0.9,
+  };
+  // return {  
+    //     icon: 'circle',
+    //     iconShape: 'marker',
+    //     borderColor: '#015CB4',
+    //     textColor: '#015CB4',
+    //     backgroundColor: '#FEFEFFFF',
+    //     innerIconStyle: 'font-size:9px;padding-top:1px;'
+    // };
 }
 
 

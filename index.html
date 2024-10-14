@@ -29,11 +29,11 @@
 
 	<!-- nuevos estilos -->
 	<!--Estilos de boostrap para iconos  https://github.com/masajid390/BeautifyMarker/blob/master/index.html -->
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+	<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
 		  rel="stylesheet">
 	<link rel="stylesheet" href="/dist/leaflet-beautify-marker-icon.css">
-	<script src="dist/leaflet-beautify-marker-icon.js"></script>
+	<script src="dist/leaflet-beautify-marker-icon.js"></script> -->
  <!-- panel layer -->
 	<script src="dist/leaflet-panel-layers.src.js"></script>
 	<script src="dist/leaflet-panel-layers.js"></script>
@@ -243,10 +243,11 @@
 		});
 		var FeriasBarriales = L.geoJson(ferias, {
     pointToLayer: function (feature, latlng) {
-        return L.marker(latlng, {
-            icon: L.BeautifyIcon.icon(styleFerias(feature))  // L.BeautifyIcon.icon genera el icono
-        });
-    },
+        return L.circleMarker(latlng, MarkerOptions);
+		
+            // icon: L.BeautifyIcon.icon(styleFerias(feature))  // L.BeautifyIcon.icon genera el icono
+        },
+	style: styleFerias,
     onEachFeature: feria_pop,
 });
 		
