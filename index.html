@@ -34,7 +34,7 @@
 		  rel="stylesheet">
 	<link rel="stylesheet" href="/dist/leaflet-beautify-marker-icon.css">
 	<script src="dist/leaflet-beautify-marker-icon.js"></script> -->
- <!-- panel layer -->
+	<!-- panel layer -->
 	<script src="dist/leaflet-panel-layers.src.js"></script>
 	<script src="dist/leaflet-panel-layers.js"></script>
 	<!-- <script src="js/L.Control.Appearance.js"></script> -->
@@ -56,8 +56,8 @@
 	<!-- en la Carpeta DATA estan los js como capas-->
 	<script type="text/javascript" src="data/barrio.js"></script>
 	<!-- <script type="text/javascript" src="data/ferias_Oct2024.js"></script> -->
-
 	<script type="text/javascript" src="data/ferias_Nov2024.js"></script>
+	<script type="text/javascript" src="data/cics_nido_diat_sanluis.js"></script>
 
 	<style>
 		html,
@@ -98,11 +98,13 @@
 			box-shadow: 0 0px 0px;
 			font: 14px/16px bold, large, Arial, Helvetica;
 		}
-/* style del icono */
-.awesome-marker i {
+
+		/* style del icono */
+		.awesome-marker i {
 			font-size: 18px;
 			margin-top: 8px;
 		}
+
 		/* fullscreen
 
 		/* fullscreen */
@@ -142,39 +144,52 @@
 			z-index: 99999;
 		}
 
-/* Estilos CSS para la leyenda */
-.info.legend {
-    background: white;
-    padding: 10px;
-    border: 1px solid #ccc;	
-    border-radius: 5px;
+		/* Estilos CSS para la leyenda */
+		.info.legend {
+			background: white;
+			padding: 10px;
+			border: 1px solid #ccc;
+			border-radius: 5px;
+			font-size: 12px;
+			display: grid;
+			grid-template-columns: repeat(2, 1fr);
+			/* Crea 5 columnas */
+			grid-gap: 0px;
+			/* Espacio entre los elementos */
+			align-items: end;
+			text-align: right;
+		}
+
+		/* Estilos para los círculos de colores en la leyenda */
+		.info.legend i {
+			width: 10px;
+			height: 10px;
+			display: -moz-grid-line;
+			border-radius: 50%;
+			margin-right: 5px;
+		}
+
+		/* Estilos para los elementos de la leyenda */
+		.legend-item {
+			display: inline;
+			align-items: center;
+			justify-content: left;
+			flex-direction: column-reverse;
+			/* Organiza los números debajo de los círculos */
+			font-size: 10px;
+			/* Ajusta el tamaño de fuente si es necesario */
+		}
+	.barrio-label {
     font-size: 12px;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Crea 5 columnas */
-    grid-gap: 0px; /* Espacio entre los elementos */
-    align-items: end;
-    text-align: right;
+    color: #2a2929;
+    background-color:  rgba(255, 255, 255, 0.612);
+	border: none;
+    padding: 0;
+    border-radius: 2%;
+    text-align: center;
 }
 
-/* Estilos para los círculos de colores en la leyenda */
-.info.legend i {
-    width: 10px;
-    height: 10px;
-    display: -moz-grid-line;
-    border-radius: 50%;
-    margin-right: 5px;
-}
-
-/* Estilos para los elementos de la leyenda */
-.legend-item {
-    display: inline;
-    align-items: center;
-    justify-content: left;
-    flex-direction: column-reverse; /* Organiza los números debajo de los círculos */
-    font-size: 10px; /* Ajusta el tamaño de fuente si es necesario */
-}
-
-</style>
+	</style>
 
 </head>
 
@@ -202,8 +217,6 @@
 			</div>
 		</div> -->
 	</div>
-
-
 
 	<script>
 		var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -235,27 +248,61 @@
 				dashArray: '0.5',
 				fillOpacity: 0.7,
 			},
-			// onEachFeature: barrios_pop,
+			onEachFeature: function (feature, layer) {
+      // Agregar un tooltip con el nombre del barrio
+	  if (feature.properties && feature.properties.BARRIO) {
+            layer.bindTooltip(feature.properties.BARRIO, {
+                permanent: false, // Para que el tooltip esté siempre visible
+                direction: "center", // Posición del texto dentro del polígono
+                className: "barrio-label" // Clase CSS opcional para personalizar el estilo
+            });
+        }
+			},
 			attribution: '<a href="https://idemsa.municipalidadsalta.gob.ar/">IDEMSa</a>'
 		});
-		var FeriasBarriales = L.geoJson(ferias, {
-    pointToLayer: function (feature, latlng) {
-        return L.circleMarker(latlng, MarkerOptions);
-		
-            // icon: L.BeautifyIcon.icon(styleFerias(feature))  // L.BeautifyIcon.icon genera el icono
-        },
-	style: styleFerias,
-    onEachFeature: feria_pop,
-});
-		
+// Función para mostrar tooltips solo si el polígono está dentro de la vista y el zoom es adecuado
+function actualizarTooltips() {
+    const zoomMinimo = 14;  // Define el nivel de zoom mínimo para mostrar los tooltips
 
-	
+    // barriosLayer.eachLayer(function (layer) {
+    //     if (mapa.getZoom() >= zoomMinimo && mapa.getBounds().intersects(layer.getBounds())) {
+    //         layer.openTooltip();  // Muestra el tooltip si cumple las condiciones
+    //     } else {
+    //         layer.closeTooltip();  // Oculta el tooltip si no cumple
+    //     }
+    // });
+}
+
+
+
+
+		var FeriasBarriales = L.geoJson(ferias, {
+			pointToLayer: function (feature, latlng) {
+				return L.circleMarker(latlng, MarkerOptions);
+
+				// icon: L.BeautifyIcon.icon(styleFerias(feature))  // L.BeautifyIcon.icon genera el icono
+			},
+			style: styleFerias,
+			onEachFeature: feria_pop,
+		});
+
+		var CicyNido = L.geoJson(cics, {
+			pointToLayer: function (feature, latlng) {
+				return L.circleMarker(latlng, MarkerOptionsCIC);
+
+				// icon: L.BeautifyIcon.icon(styleFerias(feature))  // L.BeautifyIcon.icon genera el icono
+			},
+			style: styleCIC,
+			onEachFeature: CIC_pop,
+		});
+
+
 		//mapa//
 		var map = L.map('map', {
 			center: [-24.790195501692253, -65.42084230775552],
 			zoom: 12,
 			zoomControl: false,
-			layers: [argenmap, barrio, FeriasBarriales]
+			layers: [argenmap, barrio, FeriasBarriales, ]
 
 		});
 
@@ -275,16 +322,21 @@
 		];
 
 		var overlayMaps = [{
-
 			group: "Ferrias de la Ciudad",
 			collapsed: false,
 			layers: [
-				// 	{
-				// 	layer: barrio,
-				// 	name: "<b>Barrios de la Ciudad",
-				// 	transparent: true,
-				// 	opacity: 0.5,
-				// },
+				{
+					layer: barrio,
+					name: "<b>Barrios de la Ciudad",
+					transparent: true,
+					opacity: 0.5,
+				},
+				{
+					layer: CicyNido,
+					name: "<b>CIC ",
+					transparent: true,
+					opacity: 0.5,
+				},
 				{
 					layer: FeriasBarriales,
 					name: "<b> Ferias",
@@ -293,10 +345,8 @@
 					active: false,
 
 				},
-				]
+			]
 		}
-
-	
 		];
 
 		//panel de control agregado//
@@ -341,38 +391,40 @@
 			}
 		}).addTo(map);
 
-	//geolocalizacion
+		//geolocalizacion
 
 		// add location control to global name space for testing only
 		// on a production site, omit the "lc = "!
 		lc = L.control
-		.locate({
-			setView: "untilPanOrZoom",
-			/** Keep the current map zoom level when setting the view and only pan. */
-			keepCurrentZoomLevel: false,
-			/** After activating the plugin by clicking on the icon, zoom to the selected zoom level, even when keepCurrentZoomLevel is true. Set to 'false' to disable this feature. */
-			initialZoomLevel: false,
-			position: 'topleft',
-			strings: {
-				title: "Ud. está en este punto",
-				metersUnit: "metros",
-				feetUnit: "feet",
-				popup: "<b>Radio de localización es de  ({distance} {unit} ).",
-			   outsideMapBoundsMsg: "No se encuentran datos en este radio"
-		   },
-		   locateOptions: {
-			   enableHighAccuracy: true,
-		   maxZoom: Infinity,
-			   watch: true, // if you overwrite this, visualization cannot be updated
-				setView: true // have to set this to false because we have to
-			// do setView manually
+			.locate({
+				setView: "untilPanOrZoom",
+				/** Keep the current map zoom level when setting the view and only pan. */
+				keepCurrentZoomLevel: false,
+				/** After activating the plugin by clicking on the icon, zoom to the selected zoom level, even when keepCurrentZoomLevel is true. Set to 'false' to disable this feature. */
+				initialZoomLevel: false,
+				position: 'topleft',
+				strings: {
+					title: "Ud. está en este punto",
+					metersUnit: "metros",
+					feetUnit: "feet",
+					popup: "<b>Radio de localización es de  ({distance} {unit} ).",
+					outsideMapBoundsMsg: "No se encuentran datos en este radio"
+				},
+				locateOptions: {
+					enableHighAccuracy: true,
+					maxZoom: Infinity,
+					watch: true, // if you overwrite this, visualization cannot be updated
+					setView: true // have to set this to false because we have to
+					// do setView manually
 
-			},
-	   cacheLocation: true,
-	   }).addTo(map);
+				},
+				cacheLocation: true,
+			}).addTo(map);
 
 		L.control.scale({ position: 'bottomleft', imperial: false }).addTo(map);
 		L.control.zoom({ position: 'topright' }).addTo(map);
+		// Eventos para actualizar los tooltips cuando cambian el zoom o la vista del mapa
+map.on('moveend zoomend', actualizarTooltips);
 
 
 	</script>
