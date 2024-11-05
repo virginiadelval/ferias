@@ -1,3 +1,32 @@
+function createLegendFerias() {
+  var legend = L.control({ position: "bottomright" });
+
+  legend.onAdd = function () {
+    var div = L.DomUtil.create("div", "info legend");
+    var labels = [];
+
+    // Array con los estilos y sus etiquetas correspondientes
+    var styles = [
+      { label: "FERIAS", color: "#B43D01FF" },
+      { label: "CIC", color: "#015CB4" },
+    ];
+
+    // Genera el contenido HTML de la leyenda
+    styles.forEach(function (style) {
+      labels.push(
+        '<i style="background:' + style.color + '"></i> ' + style.label
+      );
+    });
+
+    div.innerHTML = labels.join("<br>");
+    return div;
+  };
+
+  // Añade la leyenda al mapa de manera permanente
+  legend.addTo(map);
+}
+
+
 var MarkerOptions = {
     radius: 6,
     fillColor: "#000",

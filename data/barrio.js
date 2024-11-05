@@ -1,4 +1,9 @@
 
+
+
+
+
+
 		//  pleta de colores//
 		function getColor(ID) {
 			return ID > 340 ? '#800026' :
