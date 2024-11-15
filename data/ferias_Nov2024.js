@@ -69,9 +69,11 @@ var MarkerOptions = {
     //
     function feria_pop(feature, layer) {
       var popupContent =
-      //    "<hr class='hrx' style='color: #ef7d26;' align='left' noshade='noshade' size='2' width='100%' />" +
+      
      "<div style='background-color: #B83F03FF; color: #fff; padding: 10px; border-radius: 5px;' align='left'>" +
-          "<b>Nombre : </b>" + feature.properties.Name +  "</b>"+ "<br>" +
+     "<b>Ferias de la Ciudad </b>"+ "<br>" +
+          "<hr class='hrx' style='color: #ef7d26;' align='left' noshade='noshade' size='2' width='100%' />" +    
+     "<b>Nombre : </b>" + feature.properties.Name +  "</b>"+ "<br>" +
           "<b> Dias : </b>" + feature.properties.dias + "<br>" +
           "<b> Horarios : </b>" + feature.properties.horarios + "<br>" +
           "<b> Tipo : </b>" + feature.properties.tipo + "<br>" +
